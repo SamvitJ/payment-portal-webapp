@@ -32,9 +32,12 @@ var dbPort = process.env.DB_PORT || 27017;
 var dbName = process.env.DB_NAME || 'node-login';
 
 var dbURL = 'mongodb://'+dbHost+':'+dbPort+'/'+dbName;
-if (app.get('env') == 'live'){
-// prepend url with authentication credentials // 
+if (process.env.NODE_ENV == 'live'){
+	// prepend url with authentication credentials //
+	console.log("app live - prepending credentials to mongo uri");
 	dbURL = 'mongodb://'+process.env.DB_USER+':'+process.env.DB_PASS+'@'+dbHost+':'+dbPort+'/'+dbName;
+} else {
+	console.log("app not live - not adding credentials to mongo uri");
 }
 
 app.use(session({
