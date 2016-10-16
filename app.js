@@ -6,12 +6,14 @@
 **/
 
 var http = require('http');
+var https = require('https');
 var express = require('express');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var cookieParser = require('cookie-parser');
 var MongoStore = require('connect-mongo')(session);
+var querystring = require('querystring');
 
 var app = express();
 

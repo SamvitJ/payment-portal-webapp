@@ -183,7 +183,59 @@ module.exports = function(app) {
 			res.redirect('/print');	
 		});
 	});
-	
-	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
 
+// link with PayPal
+
+	app.get('/paypal', function(req, res){
+		console.log("hit paypal endpoint\n");
+
+		var https = require('https');
+
+		var querystring = require('querystring');
+		var data = querystring.stringify({
+			"cancelUrl": "https://payment-portal.herokuapp.com/home",
+			"currencyCode": "USD",
+			"endingDate": "2017-10-17T07:00:00.000Z",
+			"maxAmountPerPayment": "2.00",
+			"maxNumberOfPayments": "100",
+			"maxTotalAmountOfAllPayments": "200.00",
+			"pinType": "NOT_REQUIRED",
+			"requestEnvelope.errorLanguage": "en_US",
+			"returnUrl": "https://payment-portal.herokuapp.com/home",
+			"startingDate": "2016-11-17T07:00:00.000Z",
+			"senderEmail": "samvit.jain@gmail.com"
+		});
+		console.log("POST payload:", data);
+
+		var options = {
+			method: "POST",
+			host: "svcs.sandbox.paypal.com",
+			path: "/AdaptivePayments/Preapproval",
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded",
+				"Content-Length": Buffer.byteLength(data, 'utf8'),
+				"X-PAYPAL-SECURITY-USERID": "samvit.jain_api1.gmail.com",
+				"X-PAYPAL-SECURITY-PASSWORD": "VJL2NXNEZXFQY3CB",
+				"X-PAYPAL-SECURITY-SIGNATURE": "An5ns1Kso7MWUdW4ErQKJJJ4qi4-AVGcZQd33mPK.B0RMlCTgGYW-gOk",
+				"X-PAYPAL-REQUEST-DATA-FORMAT": "NV",
+				"X-PAYPAL-RESPONSE-DATA-FORMAT": "JSON",
+				"X-PAYPAL-APPLICATION-ID": "APP-80W284485P519543T"
+			}
+		};
+
+		var request = https.request(options, function(response) {
+			response.on('data', function (chunk) {
+				console.log('Response: ' + chunk);
+				res.status(400).end(chunk);
+			});
+
+			console.log('status code:', response.statusCode);
+			console.log('headers:', response.headers);
+		});
+
+		request.write(data);
+		request.end();
+	});
+
+	app.get('*', function(req, res) { res.render('404', { title: 'Page Not Found'}); });
 };
