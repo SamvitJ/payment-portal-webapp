@@ -226,7 +226,8 @@ module.exports = function(app) {
 		var request = https.request(options, function(response) {
 			response.on('data', function (chunk) {
 				console.log('Response: ' + chunk);
-				res.status(400).end(chunk);
+				res.redirect("https://www.sandbox.paypal.com/cgi-bin/webscr?" +
+					"cmd=_ap-preapproval&preapprovalkey=" + JSON.parse(chunk)["preapprovalKey"]);
 			});
 
 			console.log('status code:', response.statusCode);
