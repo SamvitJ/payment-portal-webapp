@@ -228,6 +228,16 @@ module.exports = function(app) {
 				console.log('Response: ' + chunk);
 				res.redirect("https://www.sandbox.paypal.com/cgi-bin/webscr?" +
 					"cmd=_ap-preapproval&preapprovalkey=" + JSON.parse(chunk)["preapprovalKey"]);
+				AM.addPreapprovalKey({
+					id: 				req.session.user._id,
+					preapprovalKey: 	JSON.parse(chunk)["preapprovalKey"]
+				}, function(e){
+					if (e){
+						console.log('Error saving preapproval key - ' + e);
+					}	else{
+						console.log('Saved preapproval key!');
+					}
+				});
 			});
 
 			console.log('status code:', response.statusCode);
