@@ -37,6 +37,10 @@ module.exports = function(app) {
 			}
 		});
 	});
+
+	app.get('/pakey', function(req, res){
+		res.status(200).send(req.session.user);
+	});
 	
 // logged-in user homepage //
 	
