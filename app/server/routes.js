@@ -230,16 +230,17 @@ module.exports = function(app) {
 		var request = https.request(options, function(response) {
 			response.on('data', function (chunk) {
 				console.log('Response: ' + chunk);
+				var paKey = JSON.parse(chunk)["preapprovalKey"];
 				res.redirect("https://www.sandbox.paypal.com/cgi-bin/webscr?" +
-					"cmd=_ap-preapproval&preapprovalkey=" + JSON.parse(chunk)["preapprovalKey"]);
+					"cmd=_ap-preapproval&preapprovalkey=" + paKey);
 				AM.addPreapprovalKey({
 					id: 				req.session.user._id,
-					preapprovalKey: 	JSON.parse(chunk)["preapprovalKey"]
+					preapprovalKey: 	paKey
 				}, function(e){
 					if (e){
 						console.log('Error saving preapproval key - ' + e);
 					}	else{
-						console.log('Saved preapproval key!');
+						console.log('Saved preapproval key! - ' + paKey);
 					}
 				});
 			});
