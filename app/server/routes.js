@@ -189,9 +189,8 @@ module.exports = function(app) {
 	});
 
 // link with PayPal
-
 	app.get('/paypal', function(req, res){
-		console.log("hit paypal endpoint\n");
+		console.log("Hit paypal endpoint");
 
 		var https = require('https');
 
@@ -206,10 +205,9 @@ module.exports = function(app) {
 			"pinType": "NOT_REQUIRED",
 			"requestEnvelope.errorLanguage": "en_US",
 			"returnUrl": "https://payment-portal.herokuapp.com/home",
-			"startingDate": "2016-12-06T00:30:00.000Z",
+			"startingDate": new Date().toISOString().replace(/\..+/, '') + ".000Z",
 			"senderEmail": "samvit.jain@gmail.com"
 		});
-		console.log("POST payload:", data);
 
 		var options = {
 			method: "POST",
@@ -228,25 +226,26 @@ module.exports = function(app) {
 		};
 
 		var request = https.request(options, function(response) {
+			console.log('Paypal /Preapproval status code:', response.statusCode);
+
 			response.on('data', function (chunk) {
-				console.log('Response: ' + chunk);
+				console.log('Paypal /Preapproval response: ' + chunk);
 				var paKey = JSON.parse(chunk)["preapprovalKey"];
 				res.redirect("https://www.sandbox.paypal.com/cgi-bin/webscr?" +
 					"cmd=_ap-preapproval&preapprovalkey=" + paKey);
-				AM.addPreapprovalKey({
-					id: 				req.session.user._id,
-					preapprovalKey: 	paKey
-				}, function(e){
-					if (e){
-						console.log('Error saving preapproval key - ' + e);
-					}	else{
-						console.log('Saved preapproval key! - ' + paKey);
-					}
-				});
+				if (paKey != null) {
+					AM.addPreapprovalKey({
+						id: 				req.session.user._id,
+						preapprovalKey: 	paKey
+					}, function(e){
+						if (e){
+							console.log('Error saving preapproval key - ' + e);
+						}	else{
+							console.log('Saved preapproval key! - ' + paKey);
+						}
+					});
+				}
 			});
-
-			console.log('status code:', response.statusCode);
-			console.log('headers:', response.headers);
 		});
 
 		request.write(data);
