@@ -39,9 +39,29 @@ module.exports = function(app) {
 	});
 
 	app.get('/pakey', function(req, res){
-		res.status(200).send(req.session.user);
+		if (req.session.user != undefined) {
+			res.status(200).send(req.session.user);
+		} else {
+			res.status(401).send("Please log in to access your preapproval key!");
+		}
 	});
-	
+
+	app.get('/getkey', function(req, res){
+		AM.manualLogin(req.body['user'], req.body['pass'], function(e, o){
+			if (!o){
+				res.status(400).send(e);
+			}	else{
+				req.session.user = o;
+				if (req.body['remember-me'] == 'true'){
+					res.cookie('user', o.user, { maxAge: 900000 });
+					res.cookie('pass', o.pass, { maxAge: 900000 });
+				}
+				// res.status(200).send(o);
+				res.status(302).redirect("https://bakmnnidhhipncpkekdbahkgjgolpflj.chromiumapp.org/provider_cb#authToken=" + req.session.user['preapprovalKey']);
+			}
+		});
+	});
+
 // logged-in user homepage //
 	
 	app.get('/home', function(req, res) {
