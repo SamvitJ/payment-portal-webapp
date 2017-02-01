@@ -211,6 +211,8 @@ module.exports = function(app) {
 	app.post('/data', function(req, res) {
 		AM.addPaymentData({
 			id: 				req.session.user._id,
+			url: 				req.body.url,
+			articleId: 			req.body.articleId,
 			transactionId: 		req.body.transactionId,
 			clientId: 			req.body.clientId
 		}, function(e){
