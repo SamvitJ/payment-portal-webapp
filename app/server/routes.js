@@ -208,6 +208,11 @@ module.exports = function(app) {
 		});
 	});
 
+// transaction data
+	app.get('/data', function(req, res) {
+		res.status(200).send(req.session.user.transactions);
+	});
+
 	app.post('/data', function(req, res) {
 		AM.addPaymentData({
 			id: 				req.session.user._id,
