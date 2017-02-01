@@ -99,6 +99,18 @@ exports.addPreapprovalKey = function(newData, callback)
 	});
 }
 
+exports.addPaymentData = function(newData, callback)
+{
+	accounts.findOne({_id:getObjectId(newData.id)}, function(e, o){
+		o.transactionId 	= newData.transactionId;
+		o.clientId			= newData.clientId;
+		accounts.save(o, {safe: true}, function(e) {
+			if (e) callback(e);
+			else callback(null, o);
+		});
+	});
+}
+
 exports.updateAccount = function(newData, callback)
 {
 	accounts.findOne({_id:getObjectId(newData.id)}, function(e, o){

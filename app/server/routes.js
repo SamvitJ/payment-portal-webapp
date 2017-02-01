@@ -208,6 +208,20 @@ module.exports = function(app) {
 		});
 	});
 
+	app.post('/data', function(req, res) {
+		AM.addPaymentData({
+			id: 				req.session.user._id,
+			transactionId: 		req.body.transactionId,
+			clientId: 			req.body.clientId
+		}, function(e){
+			if (e){
+				console.log('Error saving payment data - ' + e);
+			}	else{
+				console.log('Saved payment data!');
+			}
+		});
+	});
+
 // link with PayPal
 	app.get('/paypal', function(req, res){
 		console.log("Hit paypal endpoint");

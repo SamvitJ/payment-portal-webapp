@@ -30,6 +30,16 @@ input(type='hidden', value= user._id)#userId
 			label.control-label.col-sm-3 Preapproval Key
 			.col-sm-9
 				input.form-control#pakey-tf(type='text', name='preapprovalKey', value= user.preapprovalKey)
+
+		.form-group
+			label.control-label.col-sm-3 Transaction Id
+			.col-sm-9
+				input.form-control#pakey-tf(type='text', name='transactionId', value= user.transactionId)
+
+		.form-group
+			label.control-label.col-sm-3 Client Id
+			.col-sm-9
+				input.form-control#pakey-tf(type='text', name='clientId', value= user.clientId)
 		hr
 		h6#sub2
 		.form-group
