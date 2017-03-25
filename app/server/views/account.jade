@@ -26,15 +26,6 @@ input(type='hidden', value= user._id)#userId
 					each item in countries
 						option(selected=item.name == user.country)= item.name
 
-		.form-group
-			label.control-label.col-sm-3 Preapproval Key
-			.col-sm-9
-				input.form-control#pakey-tf(type='text', name='preapprovalKey', value= user.preapprovalKey)
-
-		.form-group
-			label.control-label.col-sm-3 Transactions
-			.col-sm-9
-				input.form-control#pakey-tf(type='text', name='transactions', value= JSON.stringify(user.transactions))
 		hr
 		h6#sub2
 		.form-group
